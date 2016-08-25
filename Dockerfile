@@ -23,17 +23,17 @@ RUN sed -i 's#DocumentRoot /var/www/html#DocumentRoot /var/www/html/owncloud#g' 
 RUN sed -i 's#DocumentRoot /var/www/html#DocumentRoot /var/www/html/owncloud#g' /etc/apache2/sites-available/default-ssl.conf
 
 #Configure SSL on Server
-RUN mkdir /etc/apache2/ssl
-COPY sslcerts/server.crt /etc/apache2/ssl/server.crt
-COPY sslcerts/server.key /etc/apache2/ssl/server.key
+#RUN mkdir /etc/apache2/ssl
+#COPY sslcerts/server.crt /etc/apache2/ssl/server.crt
+#COPY sslcerts/server.key /etc/apache2/ssl/server.key
 
-RUN sed "32 s#SSLCertificateFile.*#SSLCertificateFile /etc/apache2/ssl/server.crt#" etc/apache2/sites-available/default-ssl.conf > /etc/apache2/sites-available/default-ssl.conf1
-RUN sed "33 s#SSLCertificateKeyFile.*#SSLCertificateKeyFile /etc/apache2/ssl/server.key#" /etc/apache2/sites-available/default-ssl.conf1 > /etc/apache2/sites-available/default-ssl.conf2
-RUN rm -rf /etc/apache2/sites-available/default-ssl.conf && rm -rf /etc/apache2/sites-available/default-ssl.conf1
-RUN mv /etc/apache2/sites-available/default-ssl.conf2 /etc/apache2/sites-available/default-ssl.conf 
+#RUN sed "32 s#SSLCertificateFile.*#SSLCertificateFile /etc/apache2/ssl/server.crt#" etc/apache2/sites-available/default-ssl.conf > /etc/apache2/sites-available/default-ssl.conf1
+#RUN sed "33 s#SSLCertificateKeyFile.*#SSLCertificateKeyFile /etc/apache2/ssl/server.key#" /etc/apache2/sites-available/default-ssl.conf1 > /etc/apache2/sites-available/default-ssl.conf2
+#RUN rm -rf /etc/apache2/sites-available/default-ssl.conf && rm -rf /etc/apache2/sites-available/default-ssl.conf1
+#RUN mv /etc/apache2/sites-available/default-ssl.conf2 /etc/apache2/sites-available/default-ssl.conf 
 
-RUN ln -s /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-enabled/default-ssl.conf
-RUN a2enmod ssl
+#RUN ln -s /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-enabled/default-ssl.conf
+#RUN a2enmod ssl
 
 #Tell Docker default ports for -P command
 EXPOSE 8080
