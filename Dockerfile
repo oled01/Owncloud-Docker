@@ -36,7 +36,7 @@ RUN ln -s /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-enabl
 RUN a2enmod ssl
 
 #Tell Docker default ports for -P command
-EXPOSE 80
+EXPOSE 8080
 EXPOSE 443
 
 ENTRYPOINT ["/usr/sbin/apache2ctl","-D","FOREGROUND"]
