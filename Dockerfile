@@ -12,15 +12,19 @@ RUN apt-get install php5-gd php5-json php5-curl php5-intl php5-mcrypt php5-imagi
 #For Errorfinding and testing nano my favourite editor
 RUN apt-get install nano -y
 
+RUN mkdir -p /data
+
 #Prepare for owncloud installation
 RUN wget https://download.owncloud.org/community/owncloud-9.1.0.tar.bz2 -O /var/www/html/owncloud.tar.bz2
-RUN tar -xvf /var/www/html/owncloud.tar.bz2 -C /var/www/html && rm -rf /var/www/htm/owncloud.tar.bz2
-RUN chown www-data:www-data -R /var/www/html/owncloud/
+RUN tar -xvf /var/www/html/owncloud.tar.bz2 -C /data && rm -rf /var/www/htm/owncloud.tar.bz2
+RUN chmod 777 -R /data
 
 #Reset Apache parameters to pass all owncloud security warnings
-RUN sed -i 's/AllowOverride None/AllowOverride ALL/g' /etc/apache2/apache2.conf
-RUN sed -i 's#DocumentRoot /var/www/html#DocumentRoot /var/www/html/owncloud#g' /etc/apache2/sites-available/000-default.conf
-RUN sed -i 's#DocumentRoot /var/www/html#DocumentRoot /var/www/html/owncloud#g' /etc/apache2/sites-available/default-ssl.conf
+RUN sed -i 's/AllowOverride None/AllowOverride ALL/g' /etc/apache2/apache2.conf \
+    && sed -i 's/LogFormat "%h /LogFormat "%{X-Forwarded-For}i /' /etc/apache2/apache2.conf
+
+RUN sed -i 's#DocumentRoot /var/www/html#DocumentRoot /data/owncloud#g' /etc/apache2/sites-available/000-default.conf
+RUN sed -i 's#DocumentRoot /var/www/html#DocumentRoot /data/owncloud#g' /etc/apache2/sites-available/default-ssl.conf
 
 #Configure SSL on Server
 #RUN mkdir /etc/apache2/ssl
@@ -37,6 +41,8 @@ RUN sed -i 's#DocumentRoot /var/www/html#DocumentRoot /var/www/html/owncloud#g' 
 
 #Tell Docker default ports for -P command
 EXPOSE 8080
-EXPOSE 443
+
+# no priveleged ports!
+# EXPOSE 443
 
 ENTRYPOINT ["/usr/sbin/apache2ctl","-D","FOREGROUND"]
